@@ -38,7 +38,12 @@ position controls.
 ## Using `VectorGFX`
 
 The `VectorGFX` class provides a simple API for drawing vector graphics and
-keeping the DMA engine fed.
+keeping the DMA engine fed. Simply call the `begin()` method in your setup
+function, use the `moveto()` and `lineto()` methods to draw some lines, then
+call `display()` to show them on the screen.
+
+`VectorGFX` uses a 4096x4096 coordinate system - (0, 0) is the bottom-left
+corner, while (4095, 4095) is the top-right.
 
 The following code provides an example, alternating between showing a box, an X,
 and then both.
