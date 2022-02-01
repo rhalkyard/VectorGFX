@@ -1,0 +1,23 @@
+{
+    "name": "VectorGFX",
+    "version": "0.0.1",
+    "homepage": "https://github.com/rhalkyard/VectorGFX",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rhalkyard/VectorGFX.git"
+    },
+    "description": "Library for drawing vector graphics on an X-Y display, using the ESP32's built-in DACs",
+    "keywords": [
+        "esp32",
+        "arduino",
+        "oscilloscope",
+        "vector",
+        "graphics"
+    ],
+    "frameworks": [
+        "arduino"
+    ],
+    "platforms": [
+        "espressif32"
+    ]
+}

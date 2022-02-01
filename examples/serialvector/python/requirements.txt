@@ -1,0 +1,3 @@
+HersheyFonts
+pygame
+pyserial
