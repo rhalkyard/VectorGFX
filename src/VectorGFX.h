@@ -19,9 +19,6 @@
 // Size of sample buffer
 #define SAMPLE_BUF_SZ DAC_BUF_SZ
 
-// DAC Sample rate (Hz)
-#define SAMPLE_RATE 250000
-
 // How to handle DMA buffer underrun
 // true: output 0 value - this makes underrun conditions obvious as a bright dot at (0, 0)
 // false: repeat contents of last DMA buffer - this helps mask underruns
