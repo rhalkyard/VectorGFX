@@ -1,8 +1,12 @@
 #pragma once
 
-#include "config.h"
-
+#ifdef ARDUINO
 #include <FreeRTOS.h>
+#else
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <freertos/semphr.h>
+#endif
 #include <stdint.h>
 
 // Max number of points to display

@@ -15,7 +15,8 @@
         "graphics"
     ],
     "frameworks": [
-        "arduino"
+        "arduino",
+        "espidf"
     ],
     "platforms": [
         "espressif32"

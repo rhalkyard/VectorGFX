@@ -1,6 +1,5 @@
 #include "vectorgfx.h"
 
-#include <FreeRTOS.h>
 #include <driver/i2s.h>
 #include <string.h>
 
@@ -159,7 +158,9 @@ void VectorGFX::begin(int samplerate, int taskPriority)
 
 void VectorGFX::end()
 {
+    xSemaphoreTake(this->bufferMutex, portMAX_DELAY);
     vTaskDelete(this->task);
+    xSemaphoreGive(this->bufferMutex);
     i2s_driver_uninstall(I2S_NUM_0);
 }
 
