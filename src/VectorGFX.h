@@ -30,9 +30,9 @@ extern "C"
 {
     /**
      * @brief C-linked stub for display-update task
-     * 
+     *
      * Repeatedly call the doUpdate() method of the given VectorGFX instance
-     * 
+     *
      * @param gfxInstance Pointer to VectorGFX instance
      */
     void displayTask(void *gfxInstance);
@@ -70,14 +70,14 @@ public:
 
     /**
      * @brief Append a vertex to the display buffer
-     * 
+     *
      * @param vertex Vertex to add
      */
     void addVertex(const Vertex vertex);
 
     /**
      * @brief Append a vertex to the display buffer
-     * 
+     *
      * @param x X position
      * @param y Y position
      * @param bright Brightness (0 to move cursor without drawing, nonzero to draw line)
@@ -86,7 +86,7 @@ public:
 
     /**
      * @brief Add multiple vertices to the display buffer
-     * 
+     *
      * @param vertices Array of vertices
      * @param count Number of vertices to add
      */
@@ -94,7 +94,7 @@ public:
 
     /**
      * @brief Move to position (shorthand for addVertex(x, y, 0))
-     * 
+     *
      * @param x X position
      * @param y Y position
      */
@@ -102,7 +102,7 @@ public:
 
     /**
      * @brief Draw line to position (shorthand for addVertex(x, y, 255))
-     * 
+     *
      * @param x X position
      * @param y Y position
      */
@@ -110,14 +110,14 @@ public:
 
     /**
      * @brief Return the last vertex in the buffer
-     * 
-     * @return Vertex 
+     *
+     * @return Vertex
      */
     Vertex getLastVertex();
 
     /**
      * @brief Display the current buffer
-     * 
+     *
      */
     void display();
 
@@ -147,9 +147,9 @@ private:
 
     /**
      * @brief Generate a single point, moving the beam instantaneously
-     * 
-     * @param x 
-     * @param y 
+     *
+     * @param x
+     * @param y
      */
     void dacMoveTo(uint16_t x, uint16_t y);
 
@@ -157,38 +157,38 @@ private:
      * @brief Generate a sequence of points using Bresenham's algorithm,
      * sweeping the beam in a visible line.
      *
-     * @param x 
-     * @param y 
+     * @param x
+     * @param y
      */
     void dacLineTo(uint16_t x, uint16_t y);
 
     /**
      * @brief Write a single sample to the DAC buffer
-     * 
+     *
      * Task may block if the DAC buffer is full.
-     * 
-     * @param ch1 
-     * @param ch2 
+     *
+     * @param ch1
+     * @param ch2
      */
     void dacWrite(uint16_t ch1, uint16_t ch2);
 
     /**
      * @brief Flush the DAC buffer
-     * 
+     *
      */
     void dacFlush();
 
     /**
      * @brief Handle for display-update task
-     * 
+     *
      * Retained so that display task can be killed when end() is called.
-     * 
+     *
      */
     TaskHandle_t task;
 
     /**
      * @brief Mutex controlling access to front/back buffer switching
-     * 
+     *
      */
     SemaphoreHandle_t bufferMutex;
 
@@ -207,37 +207,37 @@ private:
 
     /**
      * @brief Pointer to current front buffer
-     * 
+     *
      */
-    Vertex * volatile frontBuffer = buffer[0];
+    Vertex *volatile frontBuffer = buffer[0];
 
     /**
      * @brief Pointer to current back buffer
-     * 
+     *
      */
     Vertex *backBuffer = buffer[1];
 
     /**
      * @brief Number of vertices in front buffer
-     * 
+     *
      */
     size_t frontBufferCount = 0;
 
     /**
      * @brief Number of vertices in back buffer
-     * 
+     *
      */
     size_t backBufferCount = 0;
 
     /**
      * @brief DAC sample buffer
-     * 
+     *
      */
     uint32_t dacBuffer[SAMPLE_BUF_SZ];
 
     /**
      * @brief DAC sample buffer count
-     * 
+     *
      */
     size_t dacBufferCount = 0;
 
