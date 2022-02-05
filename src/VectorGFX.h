@@ -24,6 +24,8 @@
 // false: repeat contents of last DMA buffer - this helps mask underruns
 #define UNDERRUN_ZERO true
 
+#define DEFAULT_TASK_PRIORITY 24
+
 extern "C"
 {
     /**
@@ -57,7 +59,7 @@ public:
      *
      * @param taskPriority Priority of background display-update task
      */
-    void begin(int taskPriority = 24);
+    void begin(int taskPriority = DEFAULT_TASK_PRIORITY);
 
     /**
      * @brief Stop vector display
