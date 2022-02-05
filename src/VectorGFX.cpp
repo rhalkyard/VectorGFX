@@ -138,7 +138,7 @@ void VectorGFX::begin(int taskPriority)
 {
     const i2s_config_t i2s_config = {
         .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN),
-        .sample_rate = 1000000,
+        .sample_rate = 1000000, // not the actual sample rate; see comments below
         .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
         .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
         .communication_format = (i2s_comm_format_t)0, // default format
@@ -159,42 +159,46 @@ void VectorGFX::begin(int taskPriority)
     poke our own values into the frequency divider registers after I2S is
     initialized.
 
-    Page 304 of the Technical Reference Manual gives the following formulae:
-
-    f_i2s = 160000000 / (I2S_CLKM_DIV_NUM + I2S_CLKM_DIV_B / I2S_CLKM_DIV_A)
-
-    f_bck = f_i2s / I2S_TX_BCK_DIV_NUM
-
-    For the case of the built-in DAC, samplerate = f_bck / n_channels (usually
-    with I2S, this would also be divided by bits-per-channel, but for the
-    internal DAC, the data path is parallel and f_bck appears to drive the word
-    clock - see Page 314 of the TRM)
-
-    Thus: 160MHz / (20 + 0/1) / 2 / 2 = 2 MHz.
-
     2MHz seems to be the sweet spot; at 2.5MHz, the CPU can't keep up with
-    line-drawing. If you want to poke around at these yourself, the constraints
-    are:
-
-    1 >= I2S_CLKM_DIV_A > 64 
-
-    0 >= I2S_CLKM_DIV_B > 64 
-
-    2 >= I2S_CLKM_DIV_NUM_V > 256
-
-    2 >= I2S_TX_BCK_DIV_NUM_V > 256
-
-    The Technical Reference Manual recommends (p. 304) recommends that the
-    fractional divisor (I2S_CLKM_DIV_B / I2S_CLKM_DIV_A) not be used, as it will
-    introduce jitter.
+    line-drawing.
     */
 
-    SET_PERI_REG_BITS(I2S_CLKM_CONF_REG(0), I2S_CLKM_DIV_A_V, 1, I2S_CLKM_DIV_A_S);
-    SET_PERI_REG_BITS(I2S_CLKM_CONF_REG(0), I2S_CLKM_DIV_B_V, 0, I2S_CLKM_DIV_B_S);
-    SET_PERI_REG_BITS(I2S_CLKM_CONF_REG(0), I2S_CLKM_DIV_NUM_V, 20, I2S_CLKM_DIV_NUM_S);
-    SET_PERI_REG_BITS(I2S_SAMPLE_RATE_CONF_REG(0), I2S_TX_BCK_DIV_NUM_V, 2, I2S_TX_BCK_DIV_NUM_S);
+    this->setSampleRateDivisors(20, 0, 1, 2); // 160MHz / (20 + 0/1) / 2 / 2 = 2MHz
 
-    xTaskCreate(displayTask, "vectorgfx_display", 1000, this, taskPriority, &this->task);
+    xTaskCreate(displayTask, "vectorgfx", 1000, this, taskPriority, &this->task);
+}
+
+float VectorGFX::setSampleRateDivisors(uint8_t n, uint8_t b, uint8_t a, uint8_t m)
+{
+    /*
+    Page 304 of the Technical Reference Manual gives the following formulae:
+
+    f_i2s = 160000000 / (N + B/A)
+
+    f_bck = f_i2s / M
+
+    For the case of the built-in DAC which has a parallel interface:
+
+    samplerate = f_bck / n_channels
+
+    Thus: samplerate = 160MHz / (N + B/A) / M / 2
+
+    The Technical Reference Manual recommends (p. 304) recommends that the
+    fractional divisor (B / A) not be used, as it will introduce jitter.
+    */
+
+    /* check constraints on divisor values */
+    if (n < 2 || b >= 64 || a < 1 || a >= 64 || m < 2)
+    {
+        return -1;
+    }
+
+    SET_PERI_REG_BITS(I2S_CLKM_CONF_REG(0), I2S_CLKM_DIV_NUM_V, n, I2S_CLKM_DIV_NUM_S);
+    SET_PERI_REG_BITS(I2S_CLKM_CONF_REG(0), I2S_CLKM_DIV_B_V, b, I2S_CLKM_DIV_B_S);
+    SET_PERI_REG_BITS(I2S_CLKM_CONF_REG(0), I2S_CLKM_DIV_A_V, a, I2S_CLKM_DIV_A_S);
+    SET_PERI_REG_BITS(I2S_SAMPLE_RATE_CONF_REG(0), I2S_TX_BCK_DIV_NUM_V, m, I2S_TX_BCK_DIV_NUM_S);
+
+    return 160000000.0 / (n + b / a) / m / 2;
 }
 
 void VectorGFX::end()

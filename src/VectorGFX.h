@@ -119,6 +119,22 @@ public:
      */
     void display();
 
+    /**
+     * @brief Set sample-rate divisors
+     *
+     * Set a sample rate by directly manipulating the ESP32's I2S clock-divider
+     * registers.
+     *
+     * The resultant sample rate will be 160000000 / (n + b/a) / m / 2
+     *
+     * @param n Integer part of f_i2s divider
+     * @param b Numerator of fractional part of f_i2s divider
+     * @param a Denominator of fractional part of f_i2s divider
+     * @param m f_bck divider
+     * @return calculated effective sample rate
+     */
+    float setSampleRateDivisors(uint8_t n, uint8_t b, uint8_t a, uint8_t m);
+
 private:
     friend void displayTask(void *gfxInstance);
 
