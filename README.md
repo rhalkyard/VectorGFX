@@ -43,7 +43,9 @@ function, use the `moveto()` and `lineto()` methods to draw some lines, then
 call `display()` to show them on the screen.
 
 `VectorGFX` uses a 4096x4096 coordinate system - (0, 0) is the bottom-left
-corner, while (4095, 4095) is the top-right.
+corner, while (4095, 4095) is the top-right. Note that on the ESP32, this gets
+condensed down to 256x256 displayable points, but the higher 'virtual'
+resolution will allow for future expansion to use external DACs.
 
 The following code provides an example, alternating between showing a box, an X,
 and then both.
@@ -115,7 +117,7 @@ Note that the included libraries require the `HersheyFonts`, `pygame` and
 
 ## Technical details
 
-The ESP32 has two 12-bit, DC-coupled DACs, available on GPIOs 25 and 26. These
+The ESP32 has two 8-bit, DC-coupled DACs, available on GPIOs 25 and 26. These
 DACs can be written to directly by software, and bitluni [got some excellent
 results](https://bitluni.net/oscilloscope-as-display) driving an oscilloscope in
 this fashion. However, this approach is somewhat limited in speed, and directly
@@ -174,6 +176,12 @@ ensuring that any bandwidth-limit settings on the oscilloscope are turned off,
 and the oscilloscope inputs are set to DC coupling.
 
 ## Caveats
+
+### Low resolution
+
+The 8-bit dacs only allow for a 256x256 resolution. This is not a huge problem
+on a typical small oscilloscope screen, but it does cause lines to be visibly
+jagged.
 
 ### No brightness/blanking output
 

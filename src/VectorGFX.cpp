@@ -75,9 +75,8 @@ void VectorGFX::dacMoveTo(uint16_t x, uint16_t y)
     this->x_pos = x;
     this->y_pos = y;
 
-    /* The ESP32 DACs (and our coordinate system) are 12-bit, but the I2S engine
-    assumes a 16-bit sample, discarding the low 4 bits. Thus we need to expand
-    our 12 bit values to '16 bit' */
+    /* Our coordinate system is 12-bit, but the I2S engine assumes a 16-bit
+    sample. Thus we need to expand our 12 bit values to '16 bit' */
 
     this->dacWrite(x << 4, y << 4);
 }
