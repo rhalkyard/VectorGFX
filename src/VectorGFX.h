@@ -55,12 +55,9 @@ public:
      *
      * Set up DAC outouts and start display-update task
      *
-     * @param samplerate DAC sample rate - higher rates mean less flicker, but
-     * require more CPU time to maintain
-     *
      * @param taskPriority Priority of background display-update task
      */
-    void begin(int samplerate = 250000, int taskPriority = 24);
+    void begin(int taskPriority = 24);
 
     /**
      * @brief Stop vector display

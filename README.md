@@ -154,16 +154,11 @@ image being displayed - specifically, the number and length of lines that are
 drawn. The minimum acceptable refresh rate is highly dependent on the type of
 phosphor on the screen.
 
-More complex images can be drawn without flickering by increasing the sample
-rate when `begin()` is called, but this in turn increases the CPU time required
-by `displayTask`, increasing the risk of buffer underruns.
-
 ### The image has uneven brightness and/or a bright dot in the bottom left
 
 `displayTask` is unable to keep up with DMA, and buffer underruns are occurring.
 
-Either lower the sample rate (note that this in turn will increase flickering),
-increase the priority of `displayTask`, or provide more opportunities for
+Either increase the priority of `displayTask`, or provide more opportunities for
 `displayTask` to run by adding calls to `taskYIELD()` in your code.
 
 ### The image jumps around and has visible noise in it
