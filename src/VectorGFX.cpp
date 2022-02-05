@@ -245,13 +245,6 @@ void VectorGFX::display()
 {
     Vertex *tmp;
 
-    /* Fill buffer as much as possible by repeating the vertex list. This helps
-    prevent DMA underrun if the vertex list is short */
-    for (int i = this->backBufferCount; i + this->backBufferCount < MAX_PTS; i += this->backBufferCount)
-    {
-        memcpy(this->backBuffer + i, this->backBuffer, this->backBufferCount);
-    }
-
     xSemaphoreTake(this->bufferMutex, portMAX_DELAY);
 
     tmp = this->frontBuffer;
